@@ -6529,6 +6529,8 @@ onig_new_without_alloc(regex_t* reg,
   return r;
 }
 
+#include <stdio.h>
+
 extern int
 onig_new(regex_t** reg, const UChar* pattern, const UChar* pattern_end,
          OnigOptionType option, OnigEncoding enc, OnigSyntaxType* syntax,
@@ -6544,7 +6546,11 @@ onig_new(regex_t** reg, const UChar* pattern, const UChar* pattern_end,
 
   r = onig_compile(*reg, pattern, pattern_end, einfo);
   if (r != 0) {
+    UChar* cp;
   err:
+    cp = onigenc_strdup(enc, pattern, pattern_end);
+    fprintf(stderr, "onig_new: error: %d, %s\n", r, cp);
+    // TODO
     onig_free(*reg);
     *reg = NULL;
   }
