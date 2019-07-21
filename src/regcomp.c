@@ -6546,11 +6546,15 @@ onig_new(regex_t** reg, const UChar* pattern, const UChar* pattern_end,
 
   r = onig_compile(*reg, pattern, pattern_end, einfo);
   if (r != 0) {
-    UChar* cp;
+    UChar* p;
   err:
-    cp = onigenc_strdup(enc, pattern, pattern_end);
-    fprintf(stderr, "onig_new: error: %d, %s\n", r, cp);
-    // TODO
+    fprintf(stderr, "onig_new(): error: %d, ", r);
+    p = (UChar* )pattern;
+    while (p < pattern_end) {
+      fprintf(stderr, " %02x", (int )(*p++));
+    }
+    fprintf(stderr, "\n");
+
     onig_free(*reg);
     *reg = NULL;
   }
